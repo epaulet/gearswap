@@ -19,17 +19,28 @@ function get_sets()
 	}
 
 	sets.Magic = {}
-	sets.Magic.Precast = set_combine(sets.Idle, {})
-	sets.Magic.Cure = set_combine(sets.Idle, {
+	sets.Magic.Precast = {}
+	sets.Magic.Precast.Base = set_combine(sets.Idle, {})
+	sets.Magic.Precast.Cure = set_combine(sets.Magic.Precast.Base, {
+		back="Pahtli Cape",
+	})
+
+	sets.Magic.Midcast = {}
+	sets.Magic.Midcast.Base = set_combine(sets.Idle, {
+		head="Telchine Cap",
+	})
+	sets.Magic.Midcast.Cure = set_combine(sets.Magic.Midcast.Base, {
 		head="Marduk's Tiara +1",
 	})
-	sets.Magic.Regen = set_combine(sets.Idle, {
+	sets.Magic.Midcast.Regen = set_combine(sets.Magic.Midcast.Base, {
 		head="Marduk's Tiara +1",
 	})
-	sets.Magic.Enfeebling = set_combine(sets.Idle, {})
 	
 	sets.Resting = set_combine(sets.Idle, { waist="Qiqirn Sash" })
-	sets.TP = set_combine(sets.Idle, { 
+
+	-- TODO: WS set
+	sets.TP = set_combine(sets.Idle, {
+		head="Telchine Cap",
 		neck="Focus Collar", 
 		left_ear="Fang Earring",
 		right_ear="Tortoise Earring",
@@ -39,18 +50,20 @@ function get_sets()
 end
 
 function precast(spell)
-	equip(sets.Magic.Precast)
+	if isCure(spell.en) then
+		equip(sets.Magic.Precast.Cure)
+	else
+		equip(sets.Magic.Precast.Base)
+	end
 end
 
 function midcast(spell)
-	if string.startsWith(spell.en, "Cure") or string.startsWith(spell.en, "Cura") then
-		equip(sets.Magic.Cure)
+	if isCure(spell.en) then
+		equip(sets.Magic.Midcast.Cure)
 	elseif string.startsWith(spell.en, "Regen") then
-		equip(sets.Magic.Regen)
-	elseif spell.skill == "Enfeebling Magic" then
-		equip(sets.Magic.Enfeebling)
+		equip(sets.Magic.Midcast.Regen)
 	else
-		equip(sets.Idle)
+		equip(sets.Magic.Midcast.Base)
 	end
 end
 
@@ -70,4 +83,8 @@ function status_change(new, old)
 	elseif new == "Idle" then
 		equip(sets.Idle)
 	end
+end
+
+function isCure(spellname)
+	return string.startsWith(spellname, "Cure") or string.startsWith(spellname, "Cura")
 end
