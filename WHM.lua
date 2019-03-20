@@ -4,6 +4,7 @@ function get_sets()
 	sets.Idle = {
 		main="Homestead Wand",
 		sub="Hoplon",
+		ammo="Homiliary",
 		head="Weath. Corona +1",
 		body="Weather. Robe +1",
 		hands="Weath. Cuffs +1",
