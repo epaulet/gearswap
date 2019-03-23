@@ -21,24 +21,36 @@ function get_sets()
 
 	sets.Magic = {}
 	sets.Magic.Precast = {}
-	sets.Magic.Precast.Base = set_combine(sets.Idle, {})
+	sets.Magic.Precast.Base = set_combine(sets.Idle, {
+		hands="Gendewitha Gages +1",
+	})
 
-	-- TODO: Differentiate offensive and defensive Cure
 	sets.Magic.Precast.Cure = set_combine(sets.Magic.Precast.Base, {})
 
 	sets.Magic.Midcast = {}
 	sets.Magic.Midcast.Base = set_combine(sets.Idle, {
 		head="Telchine Cap",
 		body="Weather. Robe +1",
-		back="Dew Silk Cape +1",
+		neck="Crested Torque",
+		back="Peace Cape",
 	})
-	-- TODO: Single target vs AOE heals once I have healing vs MND gear
+
 	sets.Magic.Midcast.Cure = set_combine(sets.Magic.Midcast.Base, {
 		head="Marduk's Tiara +1",
+		neck="Justice Badge",
 		body="Gendewitha Bliaut",
+		back="Dew Silk Cape +1",
 	})
 	sets.Magic.Midcast.Regen = set_combine(sets.Magic.Midcast.Base, {
 		head="Marduk's Tiara +1",
+	})
+
+	-- TODO: Add to this
+	sets.Magic.Midcast.Offensive = set_combine(sets.Magic.Midcast.Base, {
+		head="Weath. Corona +1",
+		neck="Justice Badge",
+		hands="Gendewitha Gages +1",
+		back="Pahtli Cape",
 	})
 	
 	sets.Resting = set_combine(sets.Idle, { waist="Qiqirn Sash" })
@@ -65,7 +77,9 @@ function precast(spell)
 end
 
 function midcast(spell)
-	if isCure(spell.en) then
+	if spell.target.type == "MONSTER" then
+		equip(sets.Magic.Midcast.Offensive)
+	elseif isCure(spell.en) then
 		equip(sets.Magic.Midcast.Cure)
 	elseif string.startsWith(spell.en, "Regen") then
 		equip(sets.Magic.Midcast.Regen)
